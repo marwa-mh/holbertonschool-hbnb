@@ -114,7 +114,7 @@ Entities:
 
 ### 1. **Sign Up / Login**
 
-![sequence](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Sign%20up_%20Login.svg)
+![sequence](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/Sign%20up_%20Login.png)
 
 ### 2. **Get Room Details**
 ![sequence_room_details](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Get%20Room%20Details.svg)
