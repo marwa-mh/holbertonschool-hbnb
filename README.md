@@ -1,7 +1,7 @@
 
 # 🏡 HBnB Project – Holberton School
 
-A full-stack booking application inspired by Airbnb, enabling users to sign up, search for places, become hosts, and manage stays and reviews.
+Create comprehensive technical documentation that will serve as the foundation for the development of the HBnB Evolution application to understand the overall architecture, the detailed design of the business logic, and the interactions within the system.
 
 ---
 
@@ -12,8 +12,6 @@ A full-stack booking application inspired by Airbnb, enabling users to sign up, 
 * [Task 0: Presentation Layer (View)](#task-0-presentation-layer-view)
 * [Task 1: Database Models & Relationships](#task-1-database-models--relationships)
 * [Task 2: Sequence Diagrams](#task-2-sequence-diagrams)
-* [Task 3: Core User Flows](#task-3-core-user-flows)
-* [Technologies](#technologies)
 * [Author](#author)
 
 ---
@@ -129,24 +127,6 @@ Entities:
 ### 4. **Delete Place**
 
 ![delete_place](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Delete%20Place.svg)
-
-## 🛠️ Task 3: Core Logic Flow
-
-* **Sign Up/Login**: Validate, hash password, return JWT
-* **JWT**: Used for auth across protected endpoints
-* **Room Retrieval**: `GET /rooms/:id`, returns full room model
-* **Review**: `POST /rooms/:id/review`, requires auth
-* **Delete Place**: Checks ownership before allowing deletion
-
----
-
-## ⚙️ Technologies
-
-* **Frontend**: HTML/CSS/JS or React
-* **Backend**: Python Flask (or Express/Node, or Django)
-* **Database**: PostgreSQL / MySQL
-* **Authentication**: JWT + bcrypt
-* **Email**: SendGrid/Mailgun for verification
 
 ---
 
