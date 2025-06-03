@@ -14,7 +14,6 @@ A full-stack booking application inspired by Airbnb, enabling users to sign up, 
 * [Task 2: Sequence Diagrams](#task-2-sequence-diagrams)
 * [Task 3: Core User Flows](#task-3-core-user-flows)
 * [Technologies](#technologies)
-* [How to Run](#how-to-run)
 * [Author](#author)
 
 ---
@@ -129,7 +128,7 @@ Entities:
 
 ### 4. **Delete Place**
 
-https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Delete%20Place.svg
+![delete_place](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Delete%20Place.svg)
 
 ## 🛠️ Task 3: Core Logic Flow
 
@@ -151,34 +150,10 @@ https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Delete%20Plac
 
 ---
 
-## ▶️ How to Run
-
-1. Clone repo:
-
-   ```bash
-   git clone https://github.com/yourname/hbnb.git
-   cd hbnb
-   ```
-
-2. Install dependencies
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run the app
-
-   ```bash
-   python app.py
-   ```
-
----
-
 ## 👩‍💻 Author
 
 * **Marwa Al Mahmoud**
 * **Lily Duong**
 * **Mat Dickson**
-* Holberton School – Full Stack Cohort 26
 
 
