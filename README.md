@@ -16,15 +16,21 @@ Create comprehensive technical documentation that will serve as the foundation f
 
 ---
 
-## 📌 Overview
+## 📌 Project Overview
 
-The HBnB project is a web platform for listing, discovering, and booking accommodations. It supports:
+**HBnB** is a simplified full-stack clone of Airbnb, designed as a group project for Holberton School.
+It allows users to:
+- Sign up or log in (combined authentication flow).
+- Search and filter places by categories and keywords.
+- View place details, leave reviews, and explore amenities.
 
-* User authentication
-* Search and filtering
-* Viewing and managing room listings
-* Leaving reviews
-* Hosting functionality
+The project follows an **MVC architecture** (Model-View-Controller), which separates the application into three core components:
+
+- **Model**: The Model handles the application's data and logic. It's responsible for interacting with the database, managing data, and processing business rules.
+- **View** (Presentation Layer): The View is responsible for presenting the data to the user. It's the user interface that displays information in a user-friendly format.
+- **Controller**: Acts as the bridge between the View and the Model, processing incoming requests, applying logic, and returning appropriate responses.
+
+![MVC-pattern](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/model-view-controller-light-blue.png)
 
 ---
 
