@@ -12,7 +12,7 @@ Create comprehensive technical documentation that will serve as the foundation f
 * [Task 0: Presentation Layer (View)](#task-0-presentation-layer-view)
 * [Task 1: Database Models & Relationships](#task-1-database-models--relationships)
 * [Task 2: Sequence Diagrams](#task-2-sequence-diagrams)
-* [Author](#author)
+* [Authors](#author)
 
 ---
 
@@ -136,7 +136,7 @@ Entities:
 
 ---
 
-## 👩‍💻 Author
+## 👩‍💻 Authors
 
 * **Marwa Al Mahmoud**
 * **Lily Duong**
