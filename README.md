@@ -83,7 +83,7 @@ API Interactions:
 
 ## 🧱 Task 1: Database Models & Relationships
 
-![Concept map - Page 2](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/Business%20Logic%20Layer.svg)
+![Concept map - Page 2](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/b1.svg)
 Entities:
 
 ### `User`
