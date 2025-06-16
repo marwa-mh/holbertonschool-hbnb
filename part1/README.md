@@ -30,7 +30,7 @@ The project follows an **MVC architecture** (Model-View-Controller), which separ
 - **View** (Presentation Layer): The View is responsible for presenting the data to the user. It's the user interface that displays information in a user-friendly format.
 - **Controller**: Acts as the bridge between the View and the Model, processing incoming requests, applying logic, and returning appropriate responses.
 
-![MVC-pattern](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/model-view-controller-light-blue.png)
+![MVC-pattern](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/part1/model-view-controller-light-blue.png)
 
 ---
 
@@ -83,7 +83,7 @@ API Interactions:
 
 ## 🧱 Task 1: Database Models & Relationships
 
-![Concept map - Page 2](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/b1.svg)
+![Concept map - Page 2](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/part1/b1.svg)
 Entities:
 
 ### `User`
@@ -120,19 +120,19 @@ Entities:
 
 ### 1. **Sign Up / Login**
 
-![sequence](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/Sign%20up_%20Login.png)
+![sequence](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/part1/Sign%20up_%20Login.png)
 
 ### 2. **Get Room Details**
-![sequence_room_details](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Get%20Room%20Details.svg)
+![sequence_room_details](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/part1/squence_Get%20Room%20Details.svg)
 
 
 ### 3. **Add Review**
 
-![sequence_add_review](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Add%20Review.svg)
+![sequence_add_review](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/part1/squence_Add%20Review.svg)
 
 ### 4. **Delete Place**
 
-![delete_place](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/squence_Delete%20Place.svg)
+![delete_place](https://github.com/marwa-mh/holbertonschool-hbnb/blob/main/part1/squence_Delete%20Place.svg)
 
 ---
 
