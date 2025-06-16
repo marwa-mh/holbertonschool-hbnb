@@ -11,7 +11,7 @@ class Amenity:
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         self.name = name
-        
+        self.places = []
 
     #-------------- Properties ------------
     #name
