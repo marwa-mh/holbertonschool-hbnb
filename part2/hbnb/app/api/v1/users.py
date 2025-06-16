@@ -9,7 +9,9 @@ api = Namespace('users', description='User operations')
 user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user')
+    'email': fields.String(required=True, description='Email of the user'),
+    'is_admin': fields.Boolean(required=False, default=False, description='Admin status'),
+    'places': fields.List(fields.String, required=False, description='List of user places')
 })
 
 # /users

@@ -4,7 +4,7 @@ from app.models.user import User
 class Place:
     def __init__(self, title, description, price, latitude,
                  longitude, owner):
-        if not all([title, description, price, latitude, longitude, owner]):
+        if not all([title, price, latitude, longitude, owner]):
             raise ValueError("Required attribute not specified!")
         
         self.id = str(uuid.uuid4())
