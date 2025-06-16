@@ -4,7 +4,7 @@ from app.models.user import User
 class Place:
     def __init__(self, title, description, price, latitude,
                  longitude, owner):
-        if not all([title, description, price, latitude, longitude, owner])
+        if not all([title, description, price, latitude, longitude, owner]):
             raise ValueError("Required attribute not specified!")
         
         self.id = str(uuid.uuid4())
@@ -39,10 +39,8 @@ class Place:
     
     @description.setter
     def description(self, value):
-        if 10 < len(value.strip()) <= 100:
-            self._description = value.strip()
-        else:
-            raise ValueError("Invalid description length")
+        #optional
+        self._discription = value
     
     #price
     @property
@@ -86,12 +84,19 @@ class Place:
     def owner(self, value):
         if not isinstance(value, User):
             raise ValueError("Invalid object type passed in for owner!")
-        self._owner = owner
+        self._owner = value
     
     # -- Methods --
     def save(self):
         self.updated_at = datetime.now()
     
+    def update(self, data):
+        """Update the attributes of the object based on the provided dictionary"""
+        for key, value in data.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.save()  # Update the updated_at timestamp
+
     def add_review(self, review):
         self.reviews.append(review)
     
