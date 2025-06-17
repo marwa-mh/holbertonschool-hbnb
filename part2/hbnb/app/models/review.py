@@ -3,8 +3,8 @@ from datetime import datetime
 from app.models.user import User
 from app.models.place import Place
 class Review:
-    def __init__(self, text, rating,place, user):
-        if not all([text, rating,place, user]):
+    def __init__(self, text, rating,place_id, user_id):
+        if not all([text, rating,place_id, user_id]):
             raise ValueError("Required attribute not specified!")
         
         self.id = str(uuid.uuid4())
@@ -12,8 +12,8 @@ class Review:
         self.updated_at = datetime.now()
         self.text = text
         self.rating = rating
-        self.user = user
-        self.place = place
+        self.user_id = user_id
+        self.place_id = place_id
         
 
     #-------------- Properties ------------
@@ -44,12 +44,12 @@ class Review:
     #user
     @property
     def user(self):
-        return self._user
+        return self._user_id
     
     @user.setter
     def user(self, value):
-        if not isinstance(value, User):
-            raise ValueError("Invalid object type passed in for user!")
+        #if not isinstance(value, User):
+        #   raise ValueError("Invalid object type passed in for user!")
         self._user = value
     
     #place
@@ -59,8 +59,8 @@ class Review:
     
     @place.setter
     def place(self, value):
-        if not isinstance(value, Place):
-            raise ValueError("Invalid object type passed in for place!")
+        #if not isinstance(value, Place):
+        #    raise ValueError("Invalid object type passed in for place!")
         self._place = value
     
     # -- Methods --

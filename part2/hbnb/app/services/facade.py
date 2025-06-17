@@ -97,3 +97,51 @@ class HBnBFacade:
         place: Place = self.place_repo.get(place_id)
         if place:
             place.reviews = self.review_repo.get_by_attribute('place_id', place_id)
+    
+
+    ### for reviews
+    def create_review(self, review_data):
+    # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
+        from app.models.review import Review
+        # Validate user_id 
+        existing_user = self.user_repo.get(review_data.get('user_id'))
+        if not existing_user:
+            raise ValueError("user not exist!")
+        # Validate place_id
+        existing_place = self.place_repo.get(review_data.get('place_id'))
+        if not existing_place:
+            raise ValueError("place not exist!")
+        # Create new user instance
+        review = Review(**review_data)
+
+        # Add user to repository
+        self.review_repo.add(review)
+
+        return review
+
+
+    def get_review(self, review_id):
+        return self.review_repo.get(review_id)
+
+    def get_all_reviews(self):
+        return self.review_repo.get_all()
+
+    def get_reviews_by_place(self, place_id):
+        return self.review_repo.get_by_attribute("place_id", place_id)
+
+    def update_review(self, review_id, review_data):
+        review = self.review_repo.get(review_id)
+        if review['place_id'] != review_data['place_id']:
+            raise ValueError("You are not allowed to change the review")
+        if review['user_id'] != review_data['user_id']:
+            raise ValueError("You are not allowed to change the review")
+        # Update review attributes using the model's update method
+        review.update(review_data)
+
+        # Update the review in repository
+        self.review_repo.update(review_id, review_data)
+
+        return review
+
+    def delete_review(self, review_id):
+        self.review_repo.delete(review_id)
