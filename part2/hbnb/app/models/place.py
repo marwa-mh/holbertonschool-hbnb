@@ -49,7 +49,7 @@ class Place:
     
     @price.setter
     def price(self, value):
-        if not isinstance(value, float) or value <=0.0:
+        if not (isinstance(value, float) or isinstance(value, int)) or value <=0.0:
             raise ValueError("Invalid Price")
         self._price = float(value)
     

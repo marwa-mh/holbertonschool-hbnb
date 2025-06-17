@@ -4,14 +4,14 @@ from app.models.place import Place
 
 class Amenity:
     def __init__(self, name, place):
-        if name is None or place is None:
+        if name is None:
             raise ValueError("Required attribute not specified!")
         
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         self.name = name
-        self.place = place
+        self.place = place 
 
     #-------------- Properties ------------
     #name

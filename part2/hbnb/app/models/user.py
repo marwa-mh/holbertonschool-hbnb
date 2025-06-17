@@ -4,7 +4,7 @@ import re
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 class User:
-    def __init__(self, first_name, last_name, email, is_admin, places):
+    def __init__(self, first_name, last_name, email):
         if not all([first_name, last_name, email]):
             raise ValueError("Required attribute not specified!")
         
@@ -14,7 +14,7 @@ class User:
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.is_admin = is_admin
+        self.is_admin = False
         self.reviews = []
         self.places = []
 
@@ -57,7 +57,7 @@ class User:
     #is_admin
     @property
     def is_admin(self):
-        return self._is_admin()   
+        return self._is_admin  
     @is_admin.setter
     def is_admin(self, value):
         if not isinstance(value, bool):
