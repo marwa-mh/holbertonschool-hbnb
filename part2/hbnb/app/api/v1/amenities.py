@@ -1,7 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import HBnBFacade
-
-facade = HBnBFacade()
+from app.services.facade import shared_facade as facade
 
 api = Namespace('amenities', description='Amenity operations')
 
