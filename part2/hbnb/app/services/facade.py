@@ -1,5 +1,6 @@
 from app.persistence.repository import InMemoryRepository
-from app.models import User, Place
+from app.models import User, Place, Amenity
+
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -7,7 +8,7 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
-    # Placeholder method for creating a user
+    ### for /users
     def create_user(self, user_data):
         # Validate email uniqueness
         existing_user = self.get_user_by_email(user_data.get('email'))
@@ -53,6 +54,70 @@ class HBnBFacade:
 
         return user
 
+    ### for /amenities
+    def create_amenity(self, amenity_data):
+        """Create a new amenity"""
+        # Get the place first to validate it exists
+        place_id = amenity_data.get('place_id')
+        if not place_id:
+            raise ValueError("Place ID is required")
+
+        place = self.place_repo.get(place_id)
+        if not place:
+            raise ValueError("Place not found")
+
+        # Import here to avoid circular imports
+        from app.models.amenity import Amenity
+
+        # Create new amenity instance
+        # Pass the place object instead of place_id since the model expects a Place object
+        amenity_data_with_place = {
+            'name': amenity_data.get('name'),
+            'place': place
+        }
+
+        amenity = Amenity(**amenity_data_with_place)
+
+        # Add amenity to repository
+        self.amenity_repo.add(amenity)
+
+        return amenity
+
+    def get_amenity(self, amenity_id):
+        """Get amenity by ID"""
+        return self.amenity_repo.get(amenity_id)
+
+    def get_all_amenities(self):
+        """Get all amenities"""
+        return self.amenity_repo.get_all()
+
+    def update_amenity(self, amenity_id, amenity_data):
+        """Update an amenity"""
+        # Get the existing amenity
+        amenity = self.amenity_repo.get(amenity_id)
+        if not amenity:
+            raise ValueError("Amenity not found")
+
+        # If place_id is being updated, validate the new place exists
+        if 'place_id' in amenity_data:
+            place = self.place_repo.get(amenity_data['place_id'])
+            if not place:
+                raise ValueError("Place not found")
+            # Update the place object, not just the ID
+            amenity_data['place'] = place
+            # Remove place_id since the model uses 'place' attribute
+            del amenity_data['place_id']
+
+        # Update amenity attributes using the model's update method
+        amenity.update(amenity_data)
+
+        # Update the amenity in repository
+        self.amenity_repo.update(amenity_id, amenity_data)
+
+        return amenity
+
+
+    ### for /places -> handle later
     # Placeholder method for fetching a place by ID
     def get_place(self, place_id):
         place: Place = self.place_repo.get(place_id)
