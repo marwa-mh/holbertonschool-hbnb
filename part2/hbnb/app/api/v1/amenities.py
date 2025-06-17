@@ -7,8 +7,7 @@ api = Namespace('amenities', description='Amenity operations')
 
 # Define the amenity model for input validation and documentation
 amenity_model = api.model('Amenity', {
-    'name': fields.String(required=True, description='Name of the amenity'),
-    'place_id': fields.String(required=True, description='ID of the place this amenity belongs to')
+    'name': fields.String(required=True, description='Name of the amenity')
 })
 
 # /amenities
@@ -18,7 +17,6 @@ class AmenityList(Resource):
     @api.expect(amenity_model, validate=True)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
-    @api.response(404, 'Place not found')
     def post(self):
         """Create a new amenity"""
         amenity_data = api.payload
@@ -29,14 +27,12 @@ class AmenityList(Resource):
             return {
                 'id': new_amenity.id,
                 'name': new_amenity.name,
-                'place_id': new_amenity.place.id if new_amenity.place else None
+                'created_at': new_amenity.created_at.isoformat(),
+                'updated_at': new_amenity.updated_at.isoformat()
             }, 201
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response
-            if "not found" in str(e).lower():
-                return {'error': str(e)}, 404
-            else:
-                return {'error': str(e)}, 400
+            return {'error': str(e)}, 400
 
     # get all amenities with get
     @api.response(200, 'List of amenities retrieved successfully')
@@ -49,7 +45,8 @@ class AmenityList(Resource):
                 {
                     'id': amenity.id,
                     'name': amenity.name,
-                    'place_id': amenity.place.id if amenity.place else None
+                    'created_at': amenity.created_at.isoformat(),
+                    'updated_at': amenity.updated_at.isoformat()
                 } for amenity in amenities
             ], 200
         except Exception as e:
@@ -69,7 +66,8 @@ class Amenity(Resource):
         return {
             'id': amenity.id,
             'name': amenity.name,
-            'place_id': amenity.place.id if amenity.place else None
+            'created_at': amenity.created_at.isoformat(),
+            'updated_at': amenity.updated_at.isoformat()
         }, 200
 
     # put request to update amenity info
@@ -87,7 +85,8 @@ class Amenity(Resource):
             return {
                 'id': updated_amenity.id,
                 'name': updated_amenity.name,
-                'place_id': updated_amenity.place.id if updated_amenity.place else None
+                'created_at': updated_amenity.created_at.isoformat(),
+                'updated_at': updated_amenity.updated_at.isoformat()
             }, 200
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response

@@ -57,26 +57,10 @@ class HBnBFacade:
     ### for /amenities
     def create_amenity(self, amenity_data):
         """Create a new amenity"""
-        # Get the place first to validate it exists
-        place_id = amenity_data.get('place_id')
-        if not place_id:
-            raise ValueError("Place ID is required")
-
-        place = self.place_repo.get(place_id)
-        if not place:
-            raise ValueError("Place not found")
-
-        # Import here to avoid circular imports
         from app.models.amenity import Amenity
 
-        # Create new amenity instance
-        # Pass the place object instead of place_id since the model expects a Place object
-        amenity_data_with_place = {
-            'name': amenity_data.get('name'),
-            'place': place
-        }
-
-        amenity = Amenity(**amenity_data_with_place)
+        # Create new amenity instance (only needs name)
+        amenity = Amenity(name=amenity_data.get('name'))
 
         # Add amenity to repository
         self.amenity_repo.add(amenity)
@@ -97,16 +81,6 @@ class HBnBFacade:
         amenity = self.amenity_repo.get(amenity_id)
         if not amenity:
             raise ValueError("Amenity not found")
-
-        # If place_id is being updated, validate the new place exists
-        if 'place_id' in amenity_data:
-            place = self.place_repo.get(amenity_data['place_id'])
-            if not place:
-                raise ValueError("Place not found")
-            # Update the place object, not just the ID
-            amenity_data['place'] = place
-            # Remove place_id since the model uses 'place' attribute
-            del amenity_data['place_id']
 
         # Update amenity attributes using the model's update method
         amenity.update(amenity_data)

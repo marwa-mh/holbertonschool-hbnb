@@ -1,41 +1,28 @@
 import uuid
 from datetime import datetime
-from app.models.place import Place
 
 class Amenity:
-    def __init__(self, name, place):
-        if name is None or place is None:
-            raise ValueError("Required attribute not specified!")
+    def __init__(self, name):
+        if not name or not name.strip():
+            raise ValueError("Name is required")
 
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
-        self.name = name
-        self.place = place
+        self.name = name.strip()
 
-    #-------------- Properties ------------
-    #name
+    # -------------- Properties ------------
     @property
     def name(self):
         return self._name
 
     @name.setter
     def name(self, value):
-        if len(value.strip()) > 0:
+        if value and len(value.strip()) > 0:
             self._name = value.strip()
         else:
-            raise ValueError("name is required")
+            raise ValueError("Name is required")
 
-    #place
-    @property
-    def place(self):
-        return self._place
-
-    @place.setter
-    def place(self, value):
-        if not isinstance(value, Place):
-            raise ValueError("Invalid object type passed in for place!")
-        self._place = value
     # -- Methods --
     def save(self):
         self.updated_at = datetime.now()
@@ -46,4 +33,3 @@ class Amenity:
             if hasattr(self, key):
                 setattr(self, key, value)
         self.save()  # Update the updated_at timestamp
-
