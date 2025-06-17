@@ -3,6 +3,7 @@ from datetime import datetime
 import re
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+
 class User:
     def __init__(self, first_name, last_name, email, is_admin=False, places=None):
         if not all([first_name, last_name, email]):
@@ -57,7 +58,8 @@ class User:
     #is_admin
     @property
     def is_admin(self):
-        return self._is_admin()
+        return self._is_admin
+
     @is_admin.setter
     def is_admin(self, value):
         if not isinstance(value, bool):
