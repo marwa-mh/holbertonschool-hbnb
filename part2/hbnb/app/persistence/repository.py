@@ -40,6 +40,7 @@ class InMemoryRepository(Repository):
         return list(self._storage.values())
 
     def update(self, obj_id, data):
+        print(data)
         obj = self.get(obj_id)
         if obj:
             obj.update(data)

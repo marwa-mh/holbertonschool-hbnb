@@ -43,25 +43,27 @@ class Review:
     
     #user
     @property
-    def user(self):
+    def user_id(self):
         return self._user_id
     
-    @user.setter
-    def user(self, value):
-        #if not isinstance(value, User):
-        #   raise ValueError("Invalid object type passed in for user!")
-        self._user = value
+    @user_id.setter
+    def user_id(self, value):
+        if not value:
+            raise ValueError("user_id is required")
+        
+        self._user_id = value
     
     #place
     @property
-    def place(self):
-        return self._place
+    def place_id(self):
+        return self._place_id
     
-    @place.setter
-    def place(self, value):
-        #if not isinstance(value, Place):
-        #    raise ValueError("Invalid object type passed in for place!")
-        self._place = value
+    @place_id.setter
+    def place_id(self, value):
+        if not value:
+            raise ValueError("place_id is required")
+        
+        self._place_id = value
     
     # -- Methods --
     def save(self):
