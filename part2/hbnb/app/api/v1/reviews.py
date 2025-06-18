@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from app.services import facade  # same object created in init file, not a class
 
 api = Namespace('reviews', description='Review operations')
 
@@ -23,7 +23,7 @@ class ReviewList(Resource):
         try:
             # Let facade handle all validation logic
             review = facade.create_review(review_data)
-            return {'id': review.id, 'place_id': review.place_id, 'user_id': review.user_id, 'rating': review.rating, 'created_at':review.created_at, 'updated_at':review.updated_at}, 201
+            return {'id': review.id, 'place_id': review.place_id, 'user_id': review.user_id, 'text': review.text, 'rating': review.rating, 'created_at':review.created_at.isoformat(), 'updated_at':review.updated_at.isoformat()}, 201
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response
             return {'error': str(e)}, 400
@@ -39,6 +39,7 @@ class ReviewList(Resource):
 
 @api.route('/<review_id>')
 class ReviewResource(Resource):
+    # get review with ID
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
@@ -48,6 +49,7 @@ class ReviewResource(Resource):
             return {'error': 'Review not found'}, 404
         return {'id': review.id,'place_id': review.place_id, 'user_id': review.user_id, 'rating': review.rating}, 200
 
+    # update a review with ID
     @api.expect(review_model)
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
@@ -58,7 +60,7 @@ class ReviewResource(Resource):
         try:
             # Let facade handle all validation and business logic
             updated_review = facade.update_review(review_id, review_data)
-            return {'id': updated_review.id,'place_id': updated_review.place_id, 'user_id': updated_review.user_id, 'rating': updated_review.rating}, 200
+            return {'id': updated_review.id,'place_id': updated_review.place_id, 'user_id': updated_review.user_id, 'rating': updated_review.rating, 'text': updated_review.text, 'created_at': updated_review.created_at.isoformat(), 'updated_at': updated_review.updated_at.isoformat()}, 200
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response
             if "not found" in str(e).lower():
@@ -66,12 +68,19 @@ class ReviewResource(Resource):
             else:
                 return {'error': str(e)}, 400
 
+    # delete a review
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
     def delete(self, review_id):
         """Delete a review"""
         # Placeholder for the logic to delete a review
-        pass
+        try:
+            facade.delete_review(review_id)
+            return ("Delete successfully")
+        except Exception as e:
+            return {'error': str(e)}, 404
+
+
 
 @api.route('/places/<place_id>/reviews')
 class PlaceReviewList(Resource):
