@@ -1,6 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import shared_facade as facade
-
+from app.services import facade  # same object created in init file, not a class
 api = Namespace('places', description='Place operations')
 
 # Define the place model for input validation and documentation
@@ -13,6 +12,32 @@ place_model = api.model('Place', {
     'owner_id': fields.String(required=True, description='ID of the place owner'),
     'amenities': fields.List(fields.String, required=False, description='List of amenity IDs')
 })
+
+# format the response
+def format_place_response(place):
+    """Helper function to format place response with embedded objects"""
+    return {
+        'id': place.id,
+        'title': place.title,
+        'description': place.description,
+        'price': place.price,
+        'latitude': place.latitude,
+        'longitude': place.longitude,
+        'owner': {
+            'id': place.owner.id,
+            'first_name': place.owner.first_name,
+            'last_name': place.owner.last_name,
+            'email': place.owner.email
+        },
+        'amenities': [
+            {
+                'id': amenity.id,
+                'name': amenity.name
+            } for amenity in place.amenities
+        ] if place.amenities else [],
+        'created_at': place.created_at.isoformat(),
+        'updated_at': place.updated_at.isoformat()
+    }
 
 # /places
 @api.route('/')
@@ -29,18 +54,7 @@ class PlaceList(Resource):
         try:
             # Let facade handle all validation logic
             new_place = facade.create_place(place_data)
-            return {
-                'id': new_place.id,
-                'title': new_place.title,
-                'description': new_place.description,
-                'price': new_place.price,
-                'latitude': new_place.latitude,
-                'longitude': new_place.longitude,
-                'owner_id': new_place.owner.id,
-                'amenities': [amenity.id for amenity in new_place.amenities] if new_place.amenities else [],
-                'created_at': new_place.created_at.isoformat(),
-                'updated_at': new_place.updated_at.isoformat()
-            }, 201
+            return format_place_response(new_place), 201
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response
             if "not found" in str(e).lower():
@@ -55,22 +69,11 @@ class PlaceList(Resource):
         """Retrieve all places"""
         try:
             places = facade.get_all_places()
-            return [
-                {
-                    'id': place.id,
-                    'title': place.title,
-                    'description': place.description,
-                    'price': place.price,
-                    'latitude': place.latitude,
-                    'longitude': place.longitude,
-                    'owner_id': place.owner.id,
-                    'amenities': [amenity.id for amenity in place.amenities] if place.amenities else []
-                } for place in places
-            ], 200
+            return [format_place_response(place) for place in places], 200
         except Exception as e:
             return {'error': 'Internal server error'}, 500
 
-# specific place /places/<place_id>
+# specific place: /places/<place_id>
 @api.route('/<place_id>')
 class Place(Resource):
     # get request to retrieve that place info
@@ -81,18 +84,7 @@ class Place(Resource):
         place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
-        return {
-            'id': place.id,
-            'title': place.title,
-            'description': place.description,
-            'price': place.price,
-            'latitude': place.latitude,
-            'longitude': place.longitude,
-            'owner_id': place.owner.id,
-            'amenities': [amenity.id for amenity in place.amenities] if place.amenities else [],
-            'created_at': place.created_at.isoformat(),
-            'updated_at': place.updated_at.isoformat()
-        }, 200
+        return format_place_response(place), 200
 
     # put request to update place info
     @api.expect(place_model)
@@ -106,18 +98,7 @@ class Place(Resource):
         try:
             # Let facade handle all validation and business logic
             updated_place = facade.update_place(place_id, place_data)
-            return {
-                'id': updated_place.id,
-                'title': updated_place.title,
-                'description': updated_place.description,
-                'price': updated_place.price,
-                'latitude': updated_place.latitude,
-                'longitude': updated_place.longitude,
-                'owner_id': updated_place.owner.id,
-                'amenities': [amenity.id for amenity in updated_place.amenities] if updated_place.amenities else [],
-                'created_at': updated_place.created_at.isoformat(),
-                'updated_at': updated_place.updated_at.isoformat()
-            }, 200
+            return format_place_response(updated_place), 200
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response
             if "not found" in str(e).lower():

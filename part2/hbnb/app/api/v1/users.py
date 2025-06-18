@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import shared_facade as facade
+from app.services import facade  # same object created in init file, not a class
 
 api = Namespace('users', description='User operations')
 

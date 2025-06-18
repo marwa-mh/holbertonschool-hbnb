@@ -217,13 +217,13 @@ class HBnBFacade:
         return self.review_repo.get_by_attribute("place_id", place_id)
 
     def update_review(self, review_id, review_data):
+
         review = self.review_repo.get(review_id)
-        if review['place_id'] != review_data['place_id']:
+
+        if review.place_id != review_data['place_id']:
             raise ValueError("You are not allowed to change the review")
-        if review['user_id'] != review_data['user_id']:
+        if review.user_id != review_data['user_id']:
             raise ValueError("You are not allowed to change the review")
-        # Update review attributes using the model's update method
-        review.update(review_data)
 
         # Update the review in repository
         self.review_repo.update(review_id, review_data)
@@ -231,7 +231,7 @@ class HBnBFacade:
         return review
 
     def delete_review(self, review_id):
-        self.review_repo.delete(review_id)
-
-# Create a shared instance that all endpoints will use
-shared_facade = HBnBFacade()
+        if review_id:
+            self.review_repo.delete(review_id)
+        else:
+            raise ValueError("Review not found")
