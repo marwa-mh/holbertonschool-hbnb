@@ -79,17 +79,3 @@ class ReviewResource(Resource):
             return ("Review deleted successfully")
         except Exception as e:
             return {'error': str(e)}, 404
-
-
-
-@api.route('/places/<place_id>/reviews')
-class PlaceReviewList(Resource):
-    @api.response(200, 'List of reviews for the place retrieved successfully')
-    @api.response(404, 'Place not found')
-    def get(self, place_id):
-        """Get all reviews for a specific place"""
-        try:
-            reviews = facade.get_reviews_by_place(place_id)
-            return [{'id': review.id,'text':review.text, 'place_id': review.place_id, 'user_id': review.user_id, 'rating': review.rating} for review in reviews], 200
-        except Exception as e:
-            return {'error': 'Internal server error'}, 500

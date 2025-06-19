@@ -51,3 +51,10 @@ class InMemoryRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         return next((obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value), None)
+
+    def get_all_by_attribute(self, attr_name, attr_value):
+        """Return ALL objects that match the attribute value"""
+        return [
+            obj for obj in self._storage.values()
+            if hasattr(obj, attr_name) and getattr(obj, attr_name) == attr_value
+        ]
