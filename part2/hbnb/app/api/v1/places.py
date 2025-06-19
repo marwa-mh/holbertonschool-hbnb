@@ -13,6 +13,14 @@ place_model = api.model('Place', {
     'amenities': fields.List(fields.String, required=False, description='List of amenity IDs')
 })
 
+# Adding the review model
+review_model = api.model('PlaceReview', {
+    'id': fields.String(description='Review ID'),
+    'text': fields.String(description='Text of the review'),
+    'rating': fields.Integer(description='Rating of the place (1-5)'),
+    'user_id': fields.String(description='ID of the user')
+})
+
 # format the response
 def format_place_response(place):
     """Helper function to format place response with embedded objects"""
@@ -105,3 +113,23 @@ class Place(Resource):
                 return {'error': str(e)}, 404
             else:
                 return {'error': str(e)}, 400
+
+# get reviews in a specific place
+@api.route('/<place_id>/reviews')
+class PlaceReviewList(Resource):
+    @api.response(200, 'List of reviews for the place retrieved successfully')
+    @api.response(404, 'Place not found')
+
+    def get(self, place_id):
+        """Get all reviews for a specific place"""
+        try:
+            # First check if the place exists
+            place = facade.get_place(place_id)
+            if not place:
+                return {'error': 'Place not found'}, 404
+
+            # Get all reviews for this place
+            reviews = facade.get_reviews_by_place(place_id)
+            return [{'id': review.id,'text':review.text, 'place_id': review.place_id, 'user_id': review.user_id, 'rating': review.rating} for review in reviews], 200
+        except Exception as e:
+            return {'error': str(e)}, 500

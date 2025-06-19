@@ -190,7 +190,7 @@ class HBnBFacade:
     def create_review(self, review_data):
     # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
         from app.models.review import Review
-       
+
         # Validate user_id
         existing_user = self.user_repo.get(review_data.get('user_id'))
         if not existing_user:
@@ -199,7 +199,7 @@ class HBnBFacade:
         existing_place = self.place_repo.get(review_data.get('place_id'))
         if not existing_place:
             raise ValueError("place not exist!")
-        
+
          # Create new user instance
         review = Review(**review_data)
         # Add user to repository
@@ -215,7 +215,9 @@ class HBnBFacade:
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        return self.review_repo.get_by_attribute("place_id", place_id)
+        reviews = self.review_repo.get_all_by_attribute("place_id", place_id)
+        print(f"DEBUG: Found {len(reviews)} reviews for place {place_id}")
+        return reviews
 
     def update_review(self, review_id, review_data):
 
