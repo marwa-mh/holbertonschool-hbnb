@@ -1,10 +1,20 @@
 import uuid
 from datetime import datetime
 import re
+from app import db, bcrypt
+from .base_model import BaseModel
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
 class User:
+    __tablename__ = 'users'
+
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password= db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
     def __init__(self, first_name, last_name, email, is_admin=False, places=None):
         if not all([first_name, last_name, email]):
             raise ValueError("Required attribute not specified!")
@@ -66,7 +76,16 @@ class User:
             raise TypeError("The type must be boolean")
         self._is_admin = value
 
-    # -- Methods --
+    # -- Utinity Methods --
+    def hash_password(self, password):
+        """Hash the password before storing it."""
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """Verify the hashed password."""
+        return bcrypt.check_password_hash(self.password, password)
+
+    # --Business Logic methods--
     def save(self):
         self.updated_at = datetime.now()
 
