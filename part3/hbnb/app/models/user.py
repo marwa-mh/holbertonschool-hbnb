@@ -1,23 +1,39 @@
 import uuid
 from datetime import datetime
 import re
+from app.extensions import db, bcrypt
+from .base_model import BaseModel
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
-class User:
-    def __init__(self, first_name, last_name, email, is_admin=False, places=None):
+class User(BaseModel):
+    __tablename__ = 'users'
+
+    # specify explicit column names to avoid underscore prefixes
+    _first_name = db.Column('first_name', db.String(50), nullable=False)
+    _last_name = db.Column('last_name', db.String(50), nullable=False)
+    _email = db.Column('email', db.String(120), unique=True, nullable=False)
+    password= db.Column(db.String(128), nullable=False)
+    _is_admin = db.Column('is_admin',db.Boolean, default=False)
+
+    def __init__(self, first_name, last_name, email, password, is_admin=False, places=None):
+        super().__init__()  # Let BaseModel handle id and timestamps
+
         if not all([first_name, last_name, email]):
             raise ValueError("Required attribute not specified!")
 
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        # self.id = str(uuid.uuid4())
+        # self.created_at = datetime.now()
+        # self.updated_at = datetime.now() >> handled by BaseModel
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.hash_password(password)
         self.is_admin = is_admin
-        self.reviews = []
-        self.places = places if places is not None else []
+
+        # Handle by relationship - later
+        # self.reviews = []
+        # self.places = places if places is not None else []
 
     #-------------- Properties ------------
     #first_name
@@ -66,9 +82,20 @@ class User:
             raise TypeError("The type must be boolean")
         self._is_admin = value
 
-    # -- Methods --
+    # -- Utinity Methods --
+    def hash_password(self, password):
+        """Hash the password before storing it."""
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """Verify the hashed password."""
+        return bcrypt.check_password_hash(self.password, password)
+
+    # --Business Logic methods--
     def save(self):
         self.updated_at = datetime.now()
+        db.session.add(self)
+        db.session.commit()
 
     def update(self, data):
         """Update the attributes of the object based on the provided dictionary"""
