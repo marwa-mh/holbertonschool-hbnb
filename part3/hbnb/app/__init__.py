@@ -12,7 +12,7 @@ def create_app(config_class=config['development']):
 
     # Database configuration
     USER = "hbnb_p3"
-    PWD = "hbnb_p3_pw"
+    PWD = "p3_pw"
     HOST = "localhost"
     DB = "hbnb_p3_db"
 

@@ -1,7 +1,19 @@
 import uuid
 from datetime import datetime
+from app.extensions import db
+from .base_model import BaseModel
+from sqlalchemy.orm import relationship
 
-class Amenity:
+
+class Amenity(BaseModel):
+    __tablename__ = 'amenities'
+
+    _name = db.Column('name', db.String(128), nullable=False)
+
+    # Relationship with Place (many-to-many)
+    places_r = relationship("Place", secondary="place_amenity", back_populates="amenities_r")
+
+
     def __init__(self, name):
         if not name or not name.strip():
             raise ValueError("Name is required")

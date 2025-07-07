@@ -3,6 +3,8 @@ from datetime import datetime
 import re
 from app.extensions import db, bcrypt
 from .base_model import BaseModel
+from sqlalchemy.orm import relationship
+
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
@@ -16,7 +18,14 @@ class User(BaseModel):
     password= db.Column(db.String(128), nullable=False)
     _is_admin = db.Column('is_admin',db.Boolean, default=False)
 
-    def __init__(self, first_name, last_name, email, password, is_admin=False, places=None):
+    # Relationship with Review (one-to-many):
+    reviews_r = relationship("Review", back_populates="user_r", cascade="all, delete-orphan", lazy=True)
+
+    # Relationship with Place (one-to-many):
+    places_r = relationship("Place", back_populates="user_r", cascade="all, delete-orphan", lazy=True)
+
+
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         super().__init__()  # Let BaseModel handle id and timestamps
 
         if not all([first_name, last_name, email]):
@@ -30,10 +39,6 @@ class User(BaseModel):
         self.email = email
         self.hash_password(password)
         self.is_admin = is_admin
-
-        # Handle by relationship - later
-        # self.reviews = []
-        # self.places = places if places is not None else []
 
     #-------------- Properties ------------
     #first_name

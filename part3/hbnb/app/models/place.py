@@ -1,10 +1,40 @@
 import uuid
 from datetime import datetime
 from app.models.user import User
-class Place:
+from app.extensions import db
+from .base_model import BaseModel
+from sqlalchemy.orm import relationship
+
+# junction table for many-to-many relationship
+place_amenity = db.Table(
+    'place_amenity',
+    db.Column('place_id', db.ForeignKey('places.id'), primary_key=True),
+    db.Column('amenity_id', db.ForeignKey('amenities.id'), primary_key=True)
+)
+
+
+class Place(BaseModel):
+    __tablename__ = 'places'
+
+    _title = db.Column('title', db.String(100), nullable=False)
+    _description = db.Column('description', db.String(1024), nullable=True)
+    _price = db.Column('price', db.Numeric(10, 2), nullable=False)
+    _latitude = db.Column('latitude', db.Float, nullable=True)
+    _longitude = db.Column('longitude', db.Float, nullable=True)
+    _owner_id = db.Column('owner_id', db.ForeignKey('users.id'), nullable=False)
+
+    # Relationship with Amenity (many-to-many)
+    amenities_r = db.relationship("Amenity", secondary="place_amenity", back_populates="places_r")
+
+    # Relationship with Review (one-to-many)
+    reviews_r = db.relationship("Review", back_populates="place_r", cascade="all, delete-orphan", lazy=True)
+
+    # Relationship with User (many-to-one)
+    user_r = db.relationship("User", back_populates="places_r")
+
     def __init__(self, title, description, price, latitude,
-                 longitude, owner):
-        if not all([title, price, latitude, longitude, owner]):
+                 longitude, owner_id):
+        if not all([title, price, latitude, longitude, owner_id]):
             raise ValueError("Required attribute not specified!")
 
         self.id = str(uuid.uuid4())
@@ -15,9 +45,7 @@ class Place:
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner
-        self.reviews = []
-        self.amenities = []
+        self.owner_id = owner_id
 
     #-------------- Properties ------------
     #title
@@ -78,16 +106,21 @@ class Place:
             raise ValueError("Longitude must be between -180.0 and 180.0")
         self._longitude = float(value)
 
-    #owner
+    #owner_id
     @property
-    def owner(self):
-        return self._owner
+    def owner_id(self):
+        return self._owner_id
 
-    @owner.setter
-    def owner(self, value):
-        if not isinstance(value, User):
-            raise ValueError("Invalid object type passed in for owner!")
-        self._owner = value
+    @owner_id.setter
+    def owner_id(self, value):
+        if not value:
+            raise ValueError("Owner ID is required")
+
+        # Validate that the owner exists in the database
+        if not User.query.get(value):
+            raise ValueError(f"User with ID {value} does not exist")
+
+        self._owner_id = value
 
     # -- Methods --
     def save(self):
@@ -102,10 +135,10 @@ class Place:
 
     def add_review(self, review):
         """Add a review to this place"""
-        if review not in self.reviews:
+        if review not in self.reviews_r:
             self.reviews.append(review)
 
     def add_amenity(self, amenity):
         """Add an amenity to this place"""
-        if amenity not in self.amenities:
-            self.amenities.append(amenity)
+        if amenity not in self.amenities_r:
+            self.amenities_r.append(amenity)
