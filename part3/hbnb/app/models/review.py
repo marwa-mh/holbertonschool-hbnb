@@ -1,9 +1,20 @@
 import uuid
 from datetime import datetime
+from app.extensions import db
+from .base_model import BaseModel
 from app.models.user import User
 from app.models.place import Place
-class Review:
+
+class Review(BaseModel):
     def __init__(self, text, rating, place_id, user_id):
+        __tablename__ = 'reviews'
+
+        _text = db.Column('text', db.String(1024), nullable=False)
+        _rating = db.Column('rating', db.Integer, nullable=False)
+        _user_id = db.Column('user_id', db.ForeignKey('users.id'), nullable=False)
+        _place_id = db.Column('place_id', db.ForeignKey('places.id'), nullable=False)
+        
+
         if not all([text, rating, place_id, user_id]):
             raise ValueError("Required attribute not specified!")
 
