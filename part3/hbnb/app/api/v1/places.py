@@ -35,8 +35,8 @@ def format_place_response(place):
             {
                 'id': amenity.id,
                 'name': amenity.name
-            } for amenity in place.amenities
-        ] if place.amenities else [],
+            } for amenity in place.amenities_r
+        ] if place.amenities_r else [],
         'created_at': place.created_at.isoformat(),
         'updated_at': place.updated_at.isoformat()
     }

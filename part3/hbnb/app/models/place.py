@@ -3,6 +3,15 @@ from datetime import datetime
 from app.models.user import User
 from app.extensions import db
 from .base_model import BaseModel
+from sqlalchemy.orm import relationship
+
+# junction table for many-to-many relationship
+place_amenity = db.Table(
+    'place_amenity',
+    db.Column('place_id', db.ForeignKey('places.id'), primary_key=True),
+    db.Column('amenity_id', db.ForeignKey('amenities.id'), primary_key=True)
+)
+
 
 class Place(BaseModel):
     __tablename__ = 'places'
@@ -14,9 +23,14 @@ class Place(BaseModel):
     _longitude = db.Column('longitude', db.Float, nullable=True)
     _owner_id = db.Column('owner_id', db.ForeignKey('users.id'), nullable=False)
 
+    # Relationship with Amenity (many-to-many)
+    amenities_r = db.relationship("Amenity", secondary="place_amenity", back_populates="places_r")
 
-    # Define relationship to User model later to get owner
+    # Relationship with Review (one-to-many)
+    reviews_r = db.relationship("Review", back_populates="place_r", cascade="all, delete-orphan", lazy=True)
 
+    # Relationship with User (many-to-one)
+    user_r = db.relationship("User", back_populates="places_r")
 
     def __init__(self, title, description, price, latitude,
                  longitude, owner_id):
@@ -32,8 +46,6 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner_id = owner_id
-        self.reviews = []
-        self.amenities = []
 
     #-------------- Properties ------------
     #title
@@ -123,10 +135,10 @@ class Place(BaseModel):
 
     def add_review(self, review):
         """Add a review to this place"""
-        if review not in self.reviews:
+        if review not in self.reviews_r:
             self.reviews.append(review)
 
     def add_amenity(self, amenity):
         """Add an amenity to this place"""
-        if amenity not in self.amenities:
-            self.amenities.append(amenity)
+        if amenity not in self.amenities_r:
+            self.amenities_r.append(amenity)
