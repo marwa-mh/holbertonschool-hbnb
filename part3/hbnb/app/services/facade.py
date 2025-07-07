@@ -16,10 +16,13 @@ class HBnBFacade:
         if existing_user:
             raise ValueError("Email already registered")
 
-        # Create new user instance
-        user = User(**user_data)
+        # Extract password and remove it from user_data
+        password = user_data.pop('password', None)
+        if not password:
+            raise ValueError("Password is required")
 
-        user.hash_password(user_data['password'])
+        # Create new user instance
+        user = User(**user_data, password=password)
 
         # Add user to repository
         self.user_repo.add(user)
@@ -59,8 +62,6 @@ class HBnBFacade:
 
     ### for /amenities
     def create_amenity(self, amenity_data):
-        """Create a new amenity"""
-        from app.models.amenity import Amenity
 
         # Create new amenity instance (only needs name)
         amenity = Amenity(name=amenity_data.get('name'))
@@ -117,18 +118,18 @@ class HBnBFacade:
                 raise ValueError(f"Amenity with ID {amenity_id} not found")
             amenity_objects.append(amenity)
 
-        # Create new place instance with owner object
-        place_data_with_owner = {
+        # Create new place instance with owner_id (not owner object)
+        place_data_with_owner_id = {
             'title': place_data.get('title'),
             'description': place_data.get('description'),
             'price': place_data.get('price'),
             'latitude': place_data.get('latitude'),
             'longitude': place_data.get('longitude'),
-            'owner': owner  # Pass the User object, not the ID
+            'owner_id': owner_id
         }
 
         # unpacks dictionaries into keyword arguments
-        place = Place(**place_data_with_owner)
+        place = Place(**place_data_with_owner_id)
 
         # Add amenities to the place
         for amenity in amenity_objects:
@@ -154,15 +155,13 @@ class HBnBFacade:
         if not place:
             raise ValueError("Place not found")
 
-        # Handle owner update if provided
+        # Handle owner_id update if provided
         if 'owner_id' in place_data:
             owner = self.user_repo.get(place_data['owner_id'])
             if not owner:
                 raise ValueError("Owner not found")
-            # Update the owner object, not just the ID
-            place_data['owner'] = owner
-            # Remove owner_id since the model uses 'owner' attribute
-            del place_data['owner_id']
+
+            # pending: might include owner info here by using relationship (next task)
 
         # Handle amenities update if provided
         if 'amenities' in place_data:

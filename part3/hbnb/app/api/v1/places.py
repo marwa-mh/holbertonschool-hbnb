@@ -28,15 +28,9 @@ def format_place_response(place):
         'id': place.id,
         'title': place.title,
         'description': place.description,
-        'price': place.price,
+        'price': float(place.price),
         'latitude': place.latitude,
         'longitude': place.longitude,
-        'owner': {
-            'id': place.owner.id,
-            'first_name': place.owner.first_name,
-            'last_name': place.owner.last_name,
-            'email': place.owner.email
-        },
         'amenities': [
             {
                 'id': amenity.id,

@@ -1,10 +1,26 @@
 import uuid
 from datetime import datetime
 from app.models.user import User
-class Place:
+from app.extensions import db
+from .base_model import BaseModel
+
+class Place(BaseModel):
+    __tablename__ = 'places'
+
+    _title = db.Column('title', db.String(100), nullable=False)
+    _description = db.Column('description', db.String(1024), nullable=True)
+    _price = db.Column('price', db.Numeric(10, 2), nullable=False)
+    _latitude = db.Column('latitude', db.Float, nullable=True)
+    _longitude = db.Column('longitude', db.Float, nullable=True)
+    _owner_id = db.Column('owner_id', db.ForeignKey('users.id'), nullable=False)
+
+
+    # Define relationship to User model later to get owner
+
+
     def __init__(self, title, description, price, latitude,
-                 longitude, owner):
-        if not all([title, price, latitude, longitude, owner]):
+                 longitude, owner_id):
+        if not all([title, price, latitude, longitude, owner_id]):
             raise ValueError("Required attribute not specified!")
 
         self.id = str(uuid.uuid4())
@@ -15,7 +31,7 @@ class Place:
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner
+        self.owner_id = owner_id
         self.reviews = []
         self.amenities = []
 
@@ -78,16 +94,21 @@ class Place:
             raise ValueError("Longitude must be between -180.0 and 180.0")
         self._longitude = float(value)
 
-    #owner
+    #owner_id
     @property
-    def owner(self):
-        return self._owner
+    def owner_id(self):
+        return self._owner_id
 
-    @owner.setter
-    def owner(self, value):
-        if not isinstance(value, User):
-            raise ValueError("Invalid object type passed in for owner!")
-        self._owner = value
+    @owner_id.setter
+    def owner_id(self, value):
+        if not value:
+            raise ValueError("Owner ID is required")
+
+        # Validate that the owner exists in the database
+        if not User.query.get(value):
+            raise ValueError(f"User with ID {value} does not exist")
+
+        self._owner_id = value
 
     # -- Methods --
     def save(self):

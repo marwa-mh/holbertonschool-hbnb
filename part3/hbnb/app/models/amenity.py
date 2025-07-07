@@ -1,7 +1,15 @@
 import uuid
 from datetime import datetime
+from app.extensions import db
+from .base_model import BaseModel
 
-class Amenity:
+
+class Amenity(BaseModel):
+    __tablename__ = 'amenities'
+
+    _name = db.Column('name', db.String(128), nullable=False)
+
+
     def __init__(self, name):
         if not name or not name.strip():
             raise ValueError("Name is required")
