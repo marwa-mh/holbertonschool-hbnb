@@ -168,6 +168,14 @@ class HBnBFacade:
         if existing_place.owner_id == existing_user.id:
             raise ValueError("Owners cannot review their own places")
 
+        # Check if user has already reviewed this place
+        existing_review = self.get_review_by_user_and_place(
+        user_id=existing_user.id,
+        place_id=existing_place.id
+        )
+        if existing_review:
+            raise ValueError("User has already reviewed this place")
+
          # Create new user instance
         review = Review(**review_data)
 
@@ -186,6 +194,12 @@ class HBnBFacade:
         if not place:
             raise ValueError("Place not found")
         return place.reviews_r  # based on the relationship
+
+    def get_review_by_user_and_place(self, user_id, place_id):
+        print("🔍 Checking for existing review:", user_id, place_id)
+        result= self.review_repo.get_by_user_and_place(user_id, place_id)
+        print(result)
+        return result
 
     def update_review(self, review_id, review_data):
 

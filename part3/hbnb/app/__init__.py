@@ -6,15 +6,17 @@ from app.api.v1.users import api as users_api
 from app.api.v1.amenities import api as amenities_api
 from app.api.v1.places import api as places_api
 from app.api.v1.reviews import api as reviews_api
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 def create_app(config_class=config['development']):
     app = Flask(__name__)
-
     # Database configuration
-    USER = "hbnb_p3"
-    PWD = "p3_pw"
-    HOST = "localhost"
-    DB = "hbnb_p3_db"
+    USER = os.getenv("HBNB_MYSQL_USER")
+    PWD = os.getenv("HBNB_MYSQL_PWD")
+    HOST = os.getenv("HBNB_MYSQL_HOST")
+    DB = os.getenv("HBNB_MYSQL_DB")
 
     # Configure SQLAlchemy to connect SQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqldb://{USER}:{PWD}@{HOST}/{DB}'

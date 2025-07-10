@@ -59,3 +59,12 @@ class SQLAlchemyRepository(Repository):
 
     def get_all_by_attribute(self, attribute, value):
         return self.model.query.filter(getattr(self.model, attribute) == value).all()
+    
+    def get_by_user_and_place(self, user_id, place_id):
+        return self.model.query.filter(
+            self.model._user_id == user_id,
+            self.model._place_id == place_id
+        ).first()
+
+
+
