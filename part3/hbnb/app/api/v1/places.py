@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import facade  # same object created in init file, not a class
 api = Namespace('places', description='Place operations')
 
@@ -9,7 +10,7 @@ place_model = api.model('Place', {
     'price': fields.Float(required=True, description='Price per night'),
     'latitude': fields.Float(required=True, description='Latitude coordinate'),
     'longitude': fields.Float(required=True, description='Longitude coordinate'),
-    'owner_id': fields.String(required=True, description='ID of the place owner'),
+    #'owner_id': fields.String(required=True, description='ID of the place owner'),
     'amenities': fields.List(fields.String, required=False, description='List of amenity IDs')
 })
 
@@ -49,10 +50,15 @@ class PlaceList(Resource):
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     @api.response(404, 'Owner not found')
+    @jwt_required()
     def post(self):
         """Create a new place"""
         place_data = api.payload
+        current_user = get_jwt_identity()  # Get user info from token
 
+        # Inject user ID into the data before passing to the facade
+        place_data['owner_id'] = current_user['id']
+        
         try:
             # Let facade handle all validation logic
             new_place = facade.create_place(place_data)
@@ -93,10 +99,20 @@ class Place(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
         place_data = api.payload
 
+        current_user = get_jwt_identity()  # Get user info from token
+        # Set is_admin default to False if not exists
+        is_admin = current_user.get('is_admin', False)
+        user_id = current_user.get('id')
+
+        place = facade.get_place(place_id)
+        if not is_admin and place.owner_id != user_id:
+            return {'error': 'Unauthorized action'}, 403
+       
         try:
             # Let facade handle all validation and business logic
             updated_place = facade.update_place(place_id, place_data)

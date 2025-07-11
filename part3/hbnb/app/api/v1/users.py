@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade  # same object created in init file, not a class
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('users', description='User operations')
 
@@ -9,7 +10,8 @@ user_model = api.model('User', {
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email of the user'),
     'is_admin': fields.Boolean(required=False, default=False, description='Admin status'),
-    'places': fields.List(fields.String, required=False, description='List of user places')
+    'places': fields.List(fields.String, required=False, description='List of user places'),
+    'password': fields.String(required=True, description='Password of the user')
 })
 
 # /users
@@ -20,10 +22,16 @@ class UserList(Resource):
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
+        current_user = get_jwt_identity()
+        
+        # If 'is_admin' is part of the identity payload
+        if not current_user.get('is_admin'):
+            return {'error': 'Admin privileges required'}, 403
         """Register a new user"""
         user_data = api.payload
-
+        print(user_data)
         try:
             # Let facade handle all validation logic
             new_user = facade.create_user(user_data)
@@ -61,13 +69,20 @@ class User(Resource):
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def put(self, user_id):
         """Update a user's information"""
+        current_user = get_jwt_identity()  # Get user info from token
+        # Only allow non-admins to update their own profile
+        if not current_user.get('is_admin') and user_id != current_user['id']:
+            return {'error': 'Unauthorized action'}, 403
+        
         user_data = api.payload
+        is_admin = current_user.get('is_admin', False)
 
         try:
             # Let facade handle all validation and business logic
-            updated_user = facade.update_user(user_id, user_data)
+            updated_user = facade.update_user(user_id, user_data, is_admin)
             return {'id': updated_user.id, 'first_name': updated_user.first_name, 'last_name': updated_user.last_name, 'email': updated_user.email}, 200
         except ValueError as e:
             # Catch validation errors from facade and return appropriate HTTP response

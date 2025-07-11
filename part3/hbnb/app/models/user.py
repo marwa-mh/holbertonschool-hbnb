@@ -15,7 +15,7 @@ class User(BaseModel):
     _first_name = db.Column('first_name', db.String(50), nullable=False)
     _last_name = db.Column('last_name', db.String(50), nullable=False)
     _email = db.Column('email', db.String(120), unique=True, nullable=False)
-    password= db.Column(db.String(128), nullable=False)
+    _password= db.Column('password', db.String(128), nullable=False)
     _is_admin = db.Column('is_admin',db.Boolean, default=False)
 
     # Relationship with Review (one-to-many):
@@ -87,13 +87,26 @@ class User(BaseModel):
             raise TypeError("The type must be boolean")
         self._is_admin = value
 
+    #password
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        if 0 < len(value.strip()) <= 128:
+            self._password = value.strip()
+        else:
+            raise ValueError("Invalid password length")
     # -- Utinity Methods --
     def hash_password(self, password):
         """Hash the password before storing it."""
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        print("Password hashed")
 
     def verify_password(self, password):
         """Verify the hashed password."""
+        print('self.password='+self.password +', password='+password)
         return bcrypt.check_password_hash(self.password, password)
 
     # --Business Logic methods--
@@ -108,3 +121,4 @@ class User(BaseModel):
             if hasattr(self, key):
                 setattr(self, key, value)
         self.save()  # Update the updated_at timestamp
+        db.session.commit()
