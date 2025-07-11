@@ -86,6 +86,7 @@ class Review(BaseModel):
     # -- Methods --
     def save(self):
         self.updated_at = datetime.now()
+        db.session.commit()
 
     def update(self, data):
         """Update the attributes of the object based on the provided dictionary"""

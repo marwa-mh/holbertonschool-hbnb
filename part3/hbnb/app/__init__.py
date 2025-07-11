@@ -6,8 +6,13 @@ from app.api.v1.users import api as users_api
 from app.api.v1.amenities import api as amenities_api
 from app.api.v1.places import api as places_api
 from app.api.v1.reviews import api as reviews_api
+from app.api.v1.auth import api as auth_api
+from app.api.v1.protected import api as protected_api
 import os
 from dotenv import load_dotenv
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
+
 load_dotenv()
 
 def create_app(config_class=config['development']):
@@ -33,5 +38,11 @@ def create_app(config_class=config['development']):
     api.add_namespace(amenities_api, path='/api/v1/amenities')
     api.add_namespace(places_api, path='/api/v1/places')
     api.add_namespace(reviews_api, path='/api/v1/reviews')
-
+    api.add_namespace(auth_api, path="/api/v1/auth")
+    api.add_namespace(protected_api, path="/api/v1")
+    bcrypt = Bcrypt()
+    bcrypt.init_app(app)
+    app.config['SECRET_KEY'] = 'c0535e4e95d52a0d4fc8f92ebd465d59b86c87d19f5d0e6c5f4ea8d8e2fcb61d'
+    jwt = JWTManager()
+    jwt.init_app(app)
     return app

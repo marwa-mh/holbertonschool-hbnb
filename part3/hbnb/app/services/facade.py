@@ -20,13 +20,13 @@ class HBnBFacade:
             raise ValueError("Email already registered")
 
         # Extract password and remove it from user_data
-        password = user_data.pop('password', None)
+        password = user_data.get('password')
         if not password:
             raise ValueError("Password is required")
 
         # Create new user instance
-        user = User(**user_data, password=password)
-
+        user = User(**user_data)
+        print(user)
         try:
             self.user_repo.add(user)
         except IntegrityError:
@@ -45,18 +45,25 @@ class HBnBFacade:
     def get_all_users(self):
         return self.user_repo.get_all()
 
-    def update_user(self, user_id, user_data):
+    def update_user(self, user_id, user_data, is_admin = False):
         # Get the existing user
         user = self.user_repo.get(user_id)
         if not user:
             raise ValueError("User not found")
-
+        
+        if not is_admin:
+        # Prevent non-admins from updating email or password
+            if 'email' in user_data:
+                raise ValueError("You are not allowed to update email")
+            if 'password' in user_data:
+                raise ValueError("You are not allowed to update password")
+       
         # Check if email is being updated and if it's already taken by another user
         if 'email' in user_data and user_data['email'] != user.email:
             existing_user = self.get_user_by_email(user_data['email'])
             if existing_user and existing_user.id != user_id:
                 raise ValueError("Email already registered")
-
+        
         user.update(user_data)  # Use update() in User model
         return user
 
@@ -204,12 +211,11 @@ class HBnBFacade:
     def update_review(self, review_id, review_data):
 
         review = self.review_repo.get(review_id)
-
         if not review:
             raise ValueError("Review not found")
 
-        if review.place_id != review_data['place_id'] or review.user_id != review_data['user_id']:
-            raise ValueError("You are not allowed to change the review")
+        """if review.place_id != review_data['place_id'] or review.user_id != review_data['user_id']:
+            raise ValueError("You are not allowed to change the review")"""
 
         review.update(review_data)
         return review
