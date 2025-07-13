@@ -90,3 +90,19 @@ class User(Resource):
                 return {'error': str(e)}, 404
             else:
                 return {'error': str(e)}, 400
+
+    @api.response(204, 'User deleted successfully')
+    @api.response(403, 'Admin privileges required')
+    @api.response(404, 'User not found')
+    @jwt_required()
+    def delete(self, user_id):
+        """Delete a user (admin only)"""
+        current_user = get_jwt_identity()
+        if not current_user.get('is_admin'):
+            return {'error': 'Admin privileges required'}, 403
+
+        try:
+            facade.delete_user(user_id)
+            return '', 204
+        except ValueError as e:
+            return {'error': str(e)}, 404

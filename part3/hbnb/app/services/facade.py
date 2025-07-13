@@ -67,6 +67,12 @@ class HBnBFacade:
         user.update(user_data)  # Use update() in User model
         return user
 
+    def delete_user(self, user_id):
+        user = self.user_repo.get(user_id)
+        if not user:
+            raise ValueError("User not found")
+        self.user_repo.delete(user_id)
+
     ### for /amenities
     def create_amenity(self, amenity_data):
 
@@ -117,8 +123,8 @@ class HBnBFacade:
             owner_id=owner.id
         )
 
-        place.amenities = amenities
-
+        place.amenities_r = amenities
+        
         # Add place to repository
         self.place_repo.add(place)
         return place
