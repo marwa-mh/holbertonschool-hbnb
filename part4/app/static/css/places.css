@@ -1,0 +1,100 @@
+#filter {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+}
+
+#filter label {
+  font-weight: 600;
+}
+
+#filter select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #bdc3c7;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#filter select:hover {
+  border-color: #3498db;
+}
+
+/* Places grid styles */
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.place-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.place-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.place-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: filter 0.3s;
+}
+
+.place-image:hover {
+  filter: brightness(0.9);
+}
+
+.place-details {
+  padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.place-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.place-city {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.place-price {
+  font-weight: 700;
+  color: #27ae60;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.details-button {
+  background-color: #2980b9;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  font-weight: 600;
+}
+
+.details-button:hover {
+  background-color: #3498db;
+}

@@ -1,0 +1,48 @@
+/* Login form wrapper */
+.login-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  max-width: 400px;
+}
+
+/* Headings */
+.login-container h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+/* Form inputs */
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.login-container .login-button {
+   width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.login-container .login-button:hover{
+ background-color: #0056b3;
+}
+/* Error message box */
+.error-message {
+    color: #d8000c;
+    background-color: #ffd2d2;
+    border: 1px solid #d8000c;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    display: none; /* Initially hidden */
+}
