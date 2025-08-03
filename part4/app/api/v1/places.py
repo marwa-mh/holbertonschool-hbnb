@@ -144,7 +144,14 @@ class PlaceReviewList(Resource):
 
             # Get all reviews for this place
             reviews = facade.get_reviews_by_place(place_id)
-            return [{'id': review.id,'text':review.text, 'place_id': review.place_id, 'user_id': review.user_id, 'rating': review.rating} for review in reviews], 200
+            return [{'id': review.id,
+                     'text':review.text,
+                       'place_id': review.place_id,
+                        'user_id': review.user_id,
+                        'rating': review.rating,
+                        'created_at': review.created_at.isoformat() if review.created_at else None,
+                        'user_name': review.user_r.first_name + " " + review.user_r.last_name if review.user_r else None
+                           } for review in reviews], 200
         except Exception as e:
             return {'error': str(e)}, 500
 

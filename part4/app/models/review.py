@@ -18,7 +18,7 @@ class Review(BaseModel):
 
     # Relationshop with User (many-to-one):
     user_r = db.relationship("User", back_populates="reviews_r")
-
+    
 
     def __init__(self, text, rating, place_id, user_id):
 

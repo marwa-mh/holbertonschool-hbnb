@@ -9,3 +9,6 @@ def login_page():
 @pages.route('/index.html')
 def index_page():
     return render_template('index.html')
+@pages.route('/place.html')
+def place_page():
+    return render_template('place.html')
