@@ -10,7 +10,7 @@ function renderAmenityIcon(name) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
         fetchPlaces()
 
 });
@@ -24,13 +24,13 @@ async function fetchPlaces() {
     });
     // Handle the response
     const data = await response.json();
-    
+
     const errorBox = document.getElementById('errorBox');
 
     if (response.ok) {
-        
+
             renderPlaces(data);
-        
+
         errorBox.style.display ='none'
 } else {
     errorBox.textContent = data.error || 'Failed to load places. Please try again.';
@@ -63,12 +63,12 @@ function renderPlaces(places) {
 document.getElementById('price-filter').addEventListener('change', (event) => {
 
     const selectedPrice = event.target.value;
-    
+
     const placeCards = document.querySelectorAll('.place-card');
 
     placeCards.forEach(card => {
         const price = parseFloat(card.getAttribute('data-price'));
-        
+
         if (selectedPrice == 'all' || price <= parseFloat(selectedPrice)){
             card.style.display = 'block';
         }else{

@@ -50,20 +50,20 @@ class HBnBFacade:
         user = self.user_repo.get(user_id)
         if not user:
             raise ValueError("User not found")
-        
+
         if not is_admin:
         # Prevent non-admins from updating email or password
             if 'email' in user_data:
                 raise ValueError("You are not allowed to update email")
             if 'password' in user_data:
                 raise ValueError("You are not allowed to update password")
-       
+
         # Check if email is being updated and if it's already taken by another user
         if 'email' in user_data and user_data['email'] != user.email:
             existing_user = self.get_user_by_email(user_data['email'])
             if existing_user and existing_user.id != user_id:
                 raise ValueError("Email already registered")
-        
+
         user.update(user_data)  # Use update() in User model
         return user
 
@@ -124,7 +124,7 @@ class HBnBFacade:
         )
 
         place.amenities_r = amenities
-        
+
         # Add place to repository
         self.place_repo.add(place)
         return place

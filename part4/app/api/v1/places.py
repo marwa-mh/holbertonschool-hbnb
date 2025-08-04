@@ -57,12 +57,13 @@ class PlaceList(Resource):
     @jwt_required()
     def post(self):
         """Create a new place"""
+
         place_data = api.payload
         current_user = get_jwt_identity()  # Get user info from token
 
         # Inject user ID into the data before passing to the facade
         place_data['owner_id'] = current_user['id']
-        
+
         try:
             # Let facade handle all validation logic
             new_place = facade.create_place(place_data)
@@ -80,7 +81,9 @@ class PlaceList(Resource):
     def get(self):
         """Retrieve all places"""
         try:
+            print("I'm here in my place!")
             places = facade.get_all_places()
+            print(places)
             return [format_place_response(place) for place in places], 200
         except Exception as e:
             return {'error': 'Internal server error'}, 500
@@ -116,7 +119,7 @@ class Place(Resource):
         place = facade.get_place(place_id)
         if not is_admin and place.owner_id != user_id:
             return {'error': 'Unauthorized action'}, 403
-       
+
         try:
             # Let facade handle all validation and business logic
             updated_place = facade.update_place(place_id, place_data)
