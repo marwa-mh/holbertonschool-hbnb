@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorBox.style.display = 'block';
         return;
       }
-        
+
       try {
         const data = await loginUser(email, password);
         // For better security, SameSite=Strict and Secure attributes are recommended for cookies.

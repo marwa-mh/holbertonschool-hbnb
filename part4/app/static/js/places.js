@@ -1,43 +1,6 @@
 const API_BASE_URL = window.location.origin + '/api/v1';
 
 /**
- * Might be used later
- function renderAmenityIcon(name) {
-    const icons = {
-        'WiFi': '<i class="fa fa-wifi" title="WiFi"></i>',
-        'Air Conditioning': '<i class="fa fa-snowflake" title="Air Conditioning"></i>',
-        'Parking': '<i class="fa fa-car" title="Parking"></i>',
-        // Add more mappings
-    };
-    return icons[name] || `<span>${name}</span>`;
- */
-
-/**
- * Retrieves a cookie by its name.
- */
-function getCookie(name) {
-  const cookieStr = document.cookie;
-  const cookies = cookieStr.split(';');
-  for (let cookie of cookies) {
-    const [key, value] = cookie.trim().split('=');
-    if (key === name) return decodeURIComponent(value);
-  }
-  return null;
-}
-
-/**
- * Checks user authentication status by looking for a token cookie
- * and updates the UI accordingly (shows/hides login button).
- */
-function checkAuth() {
-  const token = getCookie('token');
-  const loginLink = document.querySelector('.login-button');
-  if (loginLink) {
-    loginLink.style.display = token ? 'none' : 'block';
-  }
-}
-
-/**
  * Fetches places from the API and renders them on the page.
  * Includes authentication token in the request if available.
  */
@@ -120,7 +83,6 @@ function handlePriceFilter(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkAuth();
   fetchPlaces();
 
   const priceFilter = document.getElementById('price-filter');
