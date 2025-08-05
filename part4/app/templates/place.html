@@ -8,33 +8,26 @@
 </head>
 <body>
   <header>
-    <img src="../static/images/logo.png" alt="Logo" class="logo">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="login.html" class="login-button">Login</a>
-    </nav>
+    <!-- Header content will be loaded by shared.js -->
   </header>
 
   <main>
     <section class="place-details">
-      
+
     </section>
     <section class="amenities">
 
     </section>
     <section class="reviews">
-      <div class="review-card">
-        <p>"Great place!"</p>
-        <p>— Alice, ⭐⭐⭐⭐</p>
-      </div>
-      <div class="review-card">
-        <p>"Would stay again."</p>
-        <p>— Bob, ⭐⭐⭐⭐⭐</p>
-      </div>
+      <!-- reviews fetched from place.js file -->
     </section>
 
     <section id="add-review" class="add-review">
       <h2>Add a Review</h2>
+      <div
+        id="errorBox"
+        class="error-message"
+      ></div>
       <form class="form" id="review-form">
         <label for="review-text">Review:</label>
         <textarea id="review-text" name="review-text" required></textarea>
@@ -55,9 +48,11 @@
   </main>
 
   <footer>
-    <p>All rights reserved © 2025</p>
+    <!-- Footer content will be loaded by shared.js -->
   </footer>
 
+  <script src="../static/js/shared.js"></script>
   <script src="../static/js/place.js"></script>
+  <script src="../static/js/review-form.js"></script>
 </body>
 </html>

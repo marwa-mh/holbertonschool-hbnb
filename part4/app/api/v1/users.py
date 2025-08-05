@@ -22,16 +22,17 @@ class UserList(Resource):
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
-    @jwt_required()
+    # @jwt_required()
     def post(self):
-        current_user = get_jwt_identity()
-        
+        # current_user = get_jwt_identity()
+
         # If 'is_admin' is part of the identity payload
-        if not current_user.get('is_admin'):
-            return {'error': 'Admin privileges required'}, 403
-        """Register a new user"""
+
+        # if not current_user.get('is_admin'):
+        #    return {'error': 'Admin privileges required'}, 403
+        # """Register a new user"""
         user_data = api.payload
-        print(user_data)
+        # print(user_data)
         try:
             # Let facade handle all validation logic
             new_user = facade.create_user(user_data)
@@ -76,7 +77,7 @@ class User(Resource):
         # Only allow non-admins to update their own profile
         if not current_user.get('is_admin') and user_id != current_user['id']:
             return {'error': 'Unauthorized action'}, 403
-        
+
         user_data = api.payload
         is_admin = current_user.get('is_admin', False)
 
