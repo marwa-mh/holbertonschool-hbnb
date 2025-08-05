@@ -1,3 +1,5 @@
+const API_BASE_URL = window.location.origin + '/api/v1';
+
 /**
  * Retrieves a cookie by its name.
  * @param {string} name The name of the cookie to retrieve.
@@ -14,13 +16,23 @@ function getCookie(name) {
 }
 
 /**
+ * Extracts a query parameter from the URL by its name.
+ * @param {string} paramName - The name of the query parameter.
+ * @returns {string|null} The parameter value or null if not found.
+ */
+function getQueryParam(paramName) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(paramName);
+}
+
+/**
  * Logs the user out by clearing the token cookie and redirecting.
  * @param {Event} event The click event.
  */
 function logoutUser(event) {
   event.preventDefault();
   // To delete a cookie, set its Max-Age to 0.
-  document.cookie = 'token=; path=/; Max-Age=0; SameSite=Strict; Secure';
+  document.cookie = 'token=; path=/; Max-Age=0; SameSite=Strict';
   // Redirect to login page for a cleaner logout experience.
   window.location.href = 'login.html';
 }

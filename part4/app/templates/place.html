@@ -19,18 +19,15 @@
 
     </section>
     <section class="reviews">
-      <div class="review-card">
-        <p>"Great place!"</p>
-        <p>— Alice, ⭐⭐⭐⭐</p>
-      </div>
-      <div class="review-card">
-        <p>"Would stay again."</p>
-        <p>— Bob, ⭐⭐⭐⭐⭐</p>
-      </div>
+      <!-- reviews fetched from place.js file -->
     </section>
 
     <section id="add-review" class="add-review">
       <h2>Add a Review</h2>
+      <div
+        id="errorBox"
+        class="error-message"
+      ></div>
       <form class="form" id="review-form">
         <label for="review-text">Review:</label>
         <textarea id="review-text" name="review-text" required></textarea>
@@ -56,5 +53,6 @@
 
   <script src="../static/js/shared.js"></script>
   <script src="../static/js/place.js"></script>
+  <script src="../static/js/review-form.js"></script>
 </body>
 </html>

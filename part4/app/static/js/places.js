@@ -1,5 +1,3 @@
-const API_BASE_URL = window.location.origin + '/api/v1';
-
 /**
  * Fetches places from the API and renders them on the page.
  * Includes authentication token in the request if available.

@@ -1,5 +1,3 @@
-const API_BASE_URL = window.location.origin + '/api/v1';
-
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const errorBox = document.getElementById('errorBox');
@@ -24,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const data = await loginUser(email, password);
         // For better security, SameSite=Strict and Secure attributes are recommended for cookies.
-        document.cookie = `token=${data.access_token}; path=/; SameSite=Strict; Secure`;
+        document.cookie = `token=${data.access_token}; path=/; SameSite=Strict`;
         window.location.href = 'index.html';
       } catch (error) {
         errorBox.textContent = error.message;

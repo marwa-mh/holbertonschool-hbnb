@@ -1,23 +1,17 @@
-const API_BASE_URL = window.location.origin + '/api/v1';
-
-function getPlaceIdFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-  const placeId = getPlaceIdFromURL();
+  const placeId = getQueryParam('id'); // getQueryParam is from shared.js
   const token = getCookie('token');
-  const reviewForm = document.getElementById('review-form');
   const errorBox = document.getElementById('errorBox');
-
-  if (reviewForm) {
-    reviewForm.style.display = token ? 'block' : 'none';
-  }
 
   if (placeId) {
     fetchPlaceDetails(placeId, token);
     fetchReviews(placeId, token);
+
+    // Listen for the custom event dispatched when a new review is submitted
+    document.addEventListener('reviewSubmitted', () => {
+      // Refresh the reviews list to show the new one
+      fetchReviews(placeId, token);
+    });
   } else {
     if (errorBox) {
       errorBox.textContent = 'No place ID found in URL.';

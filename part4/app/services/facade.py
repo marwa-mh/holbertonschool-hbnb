@@ -1,4 +1,5 @@
 from app.services.repositories.user_repo import UserRepository
+from app.services.repositories.review_repo import ReviewRepository
 from app.persistence.repository import SQLAlchemyRepository
 from app.models import User, Place, Amenity, Review
 from sqlalchemy.exc import IntegrityError
@@ -7,7 +8,7 @@ class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
         self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
+        self.review_repo = ReviewRepository()
         self.amenity_repo = SQLAlchemyRepository(Amenity)
 
     ### for /users
@@ -26,7 +27,6 @@ class HBnBFacade:
 
         # Create new user instance
         user = User(**user_data)
-        print(user)
         try:
             self.user_repo.add(user)
         except IntegrityError:
@@ -189,7 +189,7 @@ class HBnBFacade:
         if existing_review:
             raise ValueError("User has already reviewed this place")
 
-         # Create new user instance
+        # Create new review instance
         review = Review(**review_data)
 
         # Add user to repository
@@ -209,10 +209,7 @@ class HBnBFacade:
         return place.reviews_r  # based on the relationship
 
     def get_review_by_user_and_place(self, user_id, place_id):
-        print("🔍 Checking for existing review:", user_id, place_id)
-        result= self.review_repo.get_by_user_and_place(user_id, place_id)
-        print(result)
-        return result
+        return self.review_repo.get_by_user_and_place(user_id, place_id)
 
     def update_review(self, review_id, review_data):
 

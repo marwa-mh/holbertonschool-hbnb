@@ -45,7 +45,11 @@ def create_app(config_class=config['development']):
     api.add_namespace(protected_api, path="/api/v1")
     bcrypt = Bcrypt()
     bcrypt.init_app(app)
-    app.config['SECRET_KEY'] = 'c0535e4e95d52a0d4fc8f92ebd465d59b86c87d19f5d0e6c5f4ea8d8e2fcb61d'
+    # Load JWT secret key from environment variables
+    jwt_secret_key = os.getenv('JWT_SECRET_KEY')
+    if not jwt_secret_key:
+        raise ValueError("No JWT_SECRET_KEY set for Flask application")
+    app.config['JWT_SECRET_KEY'] = jwt_secret_key
     jwt = JWTManager()
     jwt.init_app(app)
 

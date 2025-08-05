@@ -16,13 +16,11 @@ place_model = api.model('Place', {
     'amenities': fields.List(fields.String, required=False, description='List of amenity IDs')
 })
 
-# Adding the review model
-review_model = api.model('PlaceReview', {
-    'id': fields.String(description='Review ID'),
-    'text': fields.String(description='Text of the review'),
-    'rating': fields.Integer(description='Rating of the place (1-5)'),
-    'user_id': fields.String(description='ID of the user')
+review_input_model = api.model('ReviewInput', {
+    'text': fields.String(required=True, description='Text of the review'),
+    'rating': fields.Integer(required=True, description='Rating of the place (1-5)', min=1, max=5)
 })
+
 
 # format the response
 def format_place_response(place):
@@ -44,6 +42,22 @@ def format_place_response(place):
         ] if place.amenities_r else [],
         'created_at': place.created_at.isoformat(),
         'updated_at': place.updated_at.isoformat()
+    }
+
+def format_review_response(review):
+    """Helper function to format review response with user details"""
+    user_name = None
+    if review.user_r:
+        user_name = f"{review.user_r.first_name} {review.user_r.last_name}"
+
+    return {
+        'id': review.id,
+        'text': review.text,
+        'rating': review.rating,
+        'user_id': review.user_id,
+        'place_id': review.place_id,
+        'created_at': review.created_at.isoformat() if review.created_at else None,
+        'user_name': user_name
     }
 
 # /places
@@ -81,9 +95,7 @@ class PlaceList(Resource):
     def get(self):
         """Retrieve all places"""
         try:
-            print("I'm here in my place!")
             places = facade.get_all_places()
-            print(places)
             return [format_place_response(place) for place in places], 200
         except Exception as e:
             return {'error': 'Internal server error'}, 500
@@ -131,12 +143,35 @@ class Place(Resource):
             else:
                 return {'error': str(e)}, 400
 
-# get reviews in a specific place
+# reviews in the place
 @api.route('/<place_id>/reviews')
 class PlaceReviewList(Resource):
+    @api.expect(review_input_model, validate=True)
+    @api.response(201, 'Review successfully created')
+    @api.response(400, 'Invalid input data')
+    @api.response(401, 'Unauthorized')
+    @jwt_required()
+    def post(self, place_id):
+        """Create a new review for a place"""
+
+        current_user = get_jwt_identity()
+        user_id = current_user['id']
+        review_data = api.payload
+        review_data['user_id'] = user_id
+        review_data['place_id'] = place_id
+
+        try:
+            new_review = facade.create_review(review_data)
+            return format_review_response(new_review), 201
+        except ValueError as e:
+            return {'error': str(e)}, 400
+        except Exception as e:
+            # Log the exception e for debugging
+            return {'error': 'An unexpected error occurred'}, 500
+
+    # get reviews in a specific place
     @api.response(200, 'List of reviews for the place retrieved successfully')
     @api.response(404, 'Place not found')
-
     def get(self, place_id):
         """Get all reviews for a specific place"""
         try:
@@ -147,14 +182,6 @@ class PlaceReviewList(Resource):
 
             # Get all reviews for this place
             reviews = facade.get_reviews_by_place(place_id)
-            return [{'id': review.id,
-                     'text':review.text,
-                       'place_id': review.place_id,
-                        'user_id': review.user_id,
-                        'rating': review.rating,
-                        'created_at': review.created_at.isoformat() if review.created_at else None,
-                        'user_name': review.user_r.first_name + " " + review.user_r.last_name if review.user_r else None
-                           } for review in reviews], 200
+            return [format_review_response(review) for review in reviews], 200
         except Exception as e:
             return {'error': str(e)}, 500
-
