@@ -1,5 +1,20 @@
 const API_BASE_URL = window.location.origin + '/api/v1';
+// Array of image URLs
+  const images = [
+    'static/images/img1.webp',
+    'static/images/img2.webp',
+    'static/images/img3.jpeg',
+    'static/images/img4.jpeg',
+    'static/images/img5.jpeg',
+    'static/images/img6.jpeg',
+    'static/images/img7.jpeg',
+    'static/images/img8.jpeg',
+    'static/images/img9.jpeg',
+    'static/images/img10.jpeg',
+    
+  ];
 
+ 
 /**
  * Retrieves a cookie by its name.
  * @param {string} name The name of the cookie to retrieve.

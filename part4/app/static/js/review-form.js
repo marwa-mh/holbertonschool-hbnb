@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         reviewForm.reset();
-        alert('Review submitted successfully!');
 
         // Dispatch a custom event to notify other parts of the page (i.e., place.js)
         document.dispatchEvent(new CustomEvent('reviewSubmitted'));

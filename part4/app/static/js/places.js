@@ -51,8 +51,10 @@ function renderPlaces(places) {
     const card = document.createElement('div');
     card.className = 'place-card';
     card.setAttribute('data-price', place.price);
+     // Pick random image
+  var randomImage = images[Math.floor(Math.random() * images.length)];
     card.innerHTML = `
-      <img src="${place.picture_url || 'https://via.placeholder.com/300x200'}" alt="${place.title}" class="place-image">
+      <img src="${randomImage}" alt="${place.title}" class="place-image">
       <div class="place-details">
         <h3 class="place-title">${place.title}</h3>
         <div class="place-city">${place.city || 'N/A'}</div>
