@@ -56,12 +56,11 @@ function displayPlaceDetails(place) {
     place.amenities && place.amenities.length > 0
       ? place.amenities.map((a) => a.name).join(', ')
       : 'No amenities listed.';
-
+   // Pick random image
+  var randomImage = images[Math.floor(Math.random() * images.length)];
   container.innerHTML = `
     <h2>${place.title}</h2>
-    <img src="${
-      place.picture_url || 'https://via.placeholder.com/600x400'
-    }" alt="${place.title}" class="place-image">
+    <img src="${randomImage}" alt="${place.title}" class="place-image">
     <p>${place.description}</p>
     <p><strong>Price:</strong> $${place.price.toFixed(2)}</p>
     <p><strong>City:</strong> ${place.city || 'N/A'}</p>
@@ -97,28 +96,41 @@ async function fetchReviews(placeId, token) {
     }
   }
 }
-
 function displayReviews(reviews) {
   const container = document.querySelector('.reviews');
-  if (!container) return;
+  container.innerHTML = `<h2>Reviews</h2>`;
 
-  let contentHTML = '<h3>Reviews</h3>';
-  if (reviews.length === 0) {
-    contentHTML += `<p>No reviews yet.</p>`;
-  } else {
-    const reviewHTML = reviews
-      .map(
-        (review) => `
-      <div class="review">
-        <p><strong>${review.user_name || 'Anonymous'}:</strong> ${
-          review.text
-        }</p>
-        <small>${new Date(review.created_at).toLocaleDateString()}</small>
-      </div>
-    `
-      )
-      .join('');
-    contentHTML += reviewHTML;
-  }
-  container.innerHTML = contentHTML;
+  reviews.forEach(review => {
+    const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+
+    const reviewCard = document.createElement('div');
+    reviewCard.className = 'review-card';
+    reviewCard.innerHTML = `
+      <div class="review-author">${review.user_name || 'Anonymous'}</div>
+      <div class="star-rating">${stars}</div>
+      <div class="review-text">${review.text}</div>
+    `;
+    container.appendChild(reviewCard);
+  });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const stars = document.querySelectorAll('.star-rating span');
+  const ratingInput = document.getElementById('rating-value');
+
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      // Remove previous selection
+      stars.forEach(s => s.classList.remove('selected'));
+      // Add selected class up to clicked star
+      star.classList.add('selected');
+      let current = star;
+      while (current.nextElementSibling) {
+        current = current.nextElementSibling;
+        current.classList.add('selected');
+      }
+      // Set hidden input value
+      ratingInput.value = star.getAttribute('data-value');
+    });
+  });
+});

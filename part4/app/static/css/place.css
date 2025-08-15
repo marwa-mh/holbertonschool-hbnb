@@ -1,6 +1,190 @@
+/* General layout for main content */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem; /* space between sections */
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Place Details Section */
+.place-details {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  text-align: center;
+}
+
+.place-details h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.place-details p {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  color: #555;
+}
+
 .place-image {
   width: 100%;
   max-width: 600px;
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Amenities Section */
+.amenities {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Reviews Section */
+.reviews {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.reviews h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  color: #34495e;
+}
+
+/* Each Review Card */
+.review-card {
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+}
+
+.review-card:last-child {
+  border-bottom: none;
+}
+
+.review-author {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.3rem;
+}
+
+.review-text {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Star Rating Styling */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse; /* so first star is rightmost */
+  justify-content: flex-start;
+  gap: 5px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #f1c40f;
+}
+
+.star-rating span {
+  color: #2519d3;
+  transition: color 0.2s;
+}
+
+.star-rating span:hover,
+.star-rating span:hover ~ span {
+  color: #f1c40f;
+}
+
+.star-rating .selected,
+.star-rating .selected ~ span {
+  color: #f1c40f;
+}
+
+.add-review {
+  background: #fefefe;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  width: 100%;
+  max-width: 600px; /* keeps it from stretching too much */
+  margin: 2rem auto;
+}
+
+.add-review h2 {
+  margin-bottom: 1rem;
+  color: #34495e;
+}
+
+.add-review form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-review label {
+  display: block; /* ensures label sits on its own line */
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.add-review textarea,
+.add-review select,
+.add-review button {
+  padding: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.add-review textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.add-review button {
+  background: #34495e;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-review button:hover {
+  background: #2c3e50;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  main {
+    padding: 20px;
+  }
+
+  .place-details,
+  .amenities,
+  .reviews,
+  .add-review {
+    padding: 1.2rem;
+  }
+
+  .place-details h2 {
+    font-size: 1.5rem;
+  }
 }
